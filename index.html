@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React App - Formularz</title>
+    <!-- React libary link-->
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.production.min.js"
+    ></script>
+    <!-- ReactDOM libary link-->
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+    ></script>
+    <!-- Babel link-->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <!-- Bootstrap CSS link -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script type="text/babel">
+      // App komponent klasowy
+      // Komponent nazywamy z wielkiej litery np. App, Form
+      class App extends React.Component {
+        constructor() {
+          super();
+          this.state = {
+            name: "",
+            liczbaKursow: 0,
+            isSubmitted: false,
+            tablicaLiczbyKursow: [],
+          };
+        }
+        render() {
+          const tablicaKursow = [
+            "Programowanie w C#",
+            "Angular dla Początkujących",
+            "Kurs Django",
+          ];
+          const formSubmitHandler = (ev) => {
+            // zapobiega przeładowaniu formularza
+            ev.preventDefault();
+            // czyścimy konsole
+            console.clear();
+            // wyświetlamy imię i nazwisko
+            console.log(this.state.name);
+            // wyświetlamy nazwę kursu
+            if (tablicaKursow.length >= this.state.liczbaKursow) {
+              console.log(tablicaKursow[this.state.liczbaKursow - 1]);
+            } else {
+              console.log("Nieprawidłowy numer kursu!");
+            }
+            // ustawiamy stan zmiennej na ture
+            this.setState({
+              isSubmitted: true,
+            });
+            this.setState({
+              tablicaLiczbyKursow: tablicaKursow.splice(
+                0,
+                this.state.liczbaKursow
+              ),
+            });
+            console.log(this.state.tablicaLiczbyKursow);
+          };
+          return (
+            //JSX - JS z HTML, nie jest to zwykły HTML!!
+            //Przy zwracaniu tworzymy rodzica, który wrappuje inne znaczniki HTML.
+            <div class="container p-5">
+              <h2>
+                Liczba kursów:
+                {this.state.liczbaKursow > tablicaKursow.length
+                  ? this.state.liczbaKursow
+                  : this.state.isSubmitted && this.state.liczbaKursow}
+              </h2>
+              <ul>
+                {this.state.liczbaKursow > tablicaKursow.length
+                  ? "Nieprawidłowy numer kursu!"
+                  : // jeśli zmienna isSubmitted jest true
+                    this.state.isSubmitted &&
+                    this.state.tablicaLiczbyKursow.map((item, id) => {
+                      // Zwracamy elementy listy z nazwą.
+                      // Każdy li musi posiadać unikalny klucz key
+                      return <li key={id}>{item}</li>;
+                    })}
+              </ul>
+              <form onSubmit={formSubmitHandler}>
+                <div class="form-group">
+                  <label for="name">Imie i nazwisko:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    onChange={(ev) => {
+                      this.setState({
+                        isSubmitted: false,
+                      });
+                      this.setState({
+                        name: ev.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="numerKursu">Numer kursu:</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="numerKursu"
+                    onChange={(ev) => {
+                      this.setState({
+                        isSubmitted: false,
+                      });
+                      this.setState({
+                        liczbaKursow: ev.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">
+                  Zapisz się do kursu
+                </button>
+              </form>
+            </div>
+          );
+        }
+      }
+      // Renderujemy komponent App w #app.
+      ReactDOM.render(<App />, document.getElementById("app"));
+    </script>
+    <!-- JavaScript for Bootstrap link-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
